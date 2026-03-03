@@ -1,1 +1,11 @@
+## 📌 Video Files Information
 
+This repository includes one sample video file for demonstration purposes.
+
+The original project was built using multiple locally stored video files inside the `videos` folder.
+
+Due to GitHub’s 100MB file size limitation, all original video files could not be uploaded to this repository.
+
+To experience the project fully, multiple video files can be placed inside the `videos` folder locally.
+
+The project logic and structure remain unchanged.
