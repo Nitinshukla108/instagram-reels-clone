@@ -18,7 +18,7 @@ const reels = [
     isLiked: true,
     commentCount: 97,
     caption: "Sunset hits differently when you're alone 🌅",
-   video: "./videos/video2.mp4",
+    video: "./videos/video2.mp4",
     userprofile: "./photos/photo2.jpg",
     shareCount: 45,
     isFollowed: false,
@@ -30,7 +30,7 @@ const reels = [
     isLiked: false,
     commentCount: 621,
     caption: "Best pasta of my life ❤️🍝",
-   video: "./videos/video3.mp4",
+    video: "./videos/video3.mp4",
     userprofile: "./photos/photo3.jpg",
     shareCount: 210,
     isFollowed: true,
@@ -54,8 +54,8 @@ const reels = [
     isLiked: false,
     commentCount: 114,
     caption: "New gadget drop tomorrow! ⚡📱",
-   video: "./videos/video5.mp4",
-   userprofile: "./photos/photo5.jpg",
+    video: "./videos/video5.mp4",
+    userprofile: "./photos/photo5.jpg",
     shareCount: 60,
     isFollowed: false,
   },
@@ -90,7 +90,7 @@ const reels = [
     isLiked: true,
     commentCount: 348,
     caption: "Push it till you break 💪🔥",
-   video: "./videos/video8.mp4",
+    video: "./videos/video8.mp4",
     userprofile: "./photos/photo8.jpg",
     shareCount: 400,
     isFollowed: true,
@@ -120,91 +120,89 @@ const reels = [
     isFollowed: true,
   },
 ];
+
 let allReels = document.querySelector('#all-reels');
 
 function addData(){
     let sum = '';
 
-reels.forEach(function(elem,idx){
-    sum = sum + `  <div id="reels">
-            <video loop ${elem.isMuted ? 'muted' : ''} autoplay src=${elem.video}></video>
-            <div id = ${idx} class="mute">
-            ${elem.isMuted?'<i class="ri-volume-mute-fill"></i>':'<i class="ri-volume-up-fill"></i>'}
+    reels.forEach(function(elem,idx){
+        sum += `
+        <div id="reels">
+            <video loop autoplay muted src="${elem.video}"></video>
+
+            <div id="${idx}" class="mute">
+              <i class="ri-volume-mute-fill"></i>
             </div>
+
             <div id="bottom">
               <div id="users">
-                <img src=${elem.userprofile} alt="" />
+                <img src="${elem.userprofile}" />
                 <h5>${elem.username}</h5>
-                <button id = ${idx} class ='follow'>${elem.isFollowed?'Unfollow':'Follow'}</button>
+                <button id="${idx}" class="follow">${elem.isFollowed?'Unfollow':'Follow'}</button>
                 <div id="about">
                   <p>${elem.caption}</p>
                 </div>
               </div>
             </div>
+
             <div id="right">
-              <div id = ${idx} class="like">
-                <h4>${elem.isLiked ? '<i class="ri-heart-line"></i> ' : '<i class="likeBtn ri-heart-fill"></i>' }</h4>
+              <div id="${idx}" class="like">
+                <h4>${elem.isLiked ? '<i class="ri-heart-fill"></i>' : '<i class="ri-heart-line"></i>'}</h4>
                 <h5>${elem.likeCount}</h5>
               </div>
+
               <div id="comment">
                 <h4><i class="ri-chat-1-line"></i></h4>
                 <h5>${elem.commentCount}</h5>
               </div>
+
               <div id="share">
                 <h4><i class="ri-share-forward-line"></i></h4>
                 <h5>${elem.shareCount}</h5>
               </div>
+
               <div id="menu">
                 <h4><i class="ri-more-2-fill"></i></h4>
               </div>
             </div>
-        </div>`  
-})
+        </div>`;
+    });
 
-allReels.innerHTML = sum;
+    allReels.innerHTML = sum;
 }
 
-addData()
+addData();
 
-allReels.addEventListener('click',function(elem){
-  
+allReels.addEventListener('click', function(e){
 
-  if(elem.target.className == 'like'){
-  if(!reels[elem.target.id].isLiked){
-    reels[elem.target.id].likeCount--
-    reels[elem.target.id].isLiked = true
-  }
-  else{
-      reels[elem.target.id].likeCount++
-      reels[elem.target.id].isLiked = false
-  }
+  // LIKE
+  if(e.target.closest('.like')){
+      let index = e.target.closest('.like').id;
+      reels[index].isLiked = !reels[index].isLiked;
+      reels[index].likeCount += reels[index].isLiked ? 1 : -1;
+      addData();
   }
 
-   addData();
-
-
-  if(elem.target.className == 'follow'){
-    if(!reels[elem.target.id].isFollowed){
-      reels[elem.target.id].isFollowed = true
-    }
-    else{
-      reels[elem.target.id].isFollowed = false
-    }
+  // FOLLOW
+  if(e.target.closest('.follow')){
+      let index = e.target.closest('.follow').id;
+      reels[index].isFollowed = !reels[index].isFollowed;
+      addData();
   }
-    
 
-  addData();
+  // MUTE FIX (NO RERENDER)
+  if(e.target.closest('.mute')){
+      let index = e.target.closest('.mute').id;
+      let videos = document.querySelectorAll('#reels video');
+      let video = videos[index];
 
+      video.muted = !video.muted;
 
-  if(elem.target.className == 'mute'){
-    if(!reels[elem.target.id].isMuted){
-      reels[elem.target.id].isMuted = true
-    }
-    else{
-      reels[elem.target.id].isMuted = false
-    }
+      e.target.closest('.mute').innerHTML =
+        video.muted
+          ? '<i class="ri-volume-mute-fill"></i>'
+          : '<i class="ri-volume-up-fill"></i>';
   }
-    
-  addData();
-    
-})
+
+});
